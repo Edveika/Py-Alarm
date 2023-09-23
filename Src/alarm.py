@@ -4,6 +4,10 @@ import datetime
 class Alarm:
     def __init__(self):
         self.alarms = []
+        # load existing data from a file
+
+    def mainloop():
+        return 0
 
     def add_alarm(self, alarm):
         self.alarms.append(alarm)
@@ -11,16 +15,20 @@ class Alarm:
     def remove_alarm(self, alarm):
         self.alarms.remove(alarm)
 
-    def check_alarms(self):
+    def alarm_active(self, alarm):
         now_hours = datetime.datetime.now().hour
         now_minutes = datetime.datetime.now().minute
 
-        for alarm in self.alarms:
-            if alarm.hour == now_hours and alarm.minute == now_minutes:
-                return True
+        if alarm.hour == now_hours and alarm.minute == now_minutes:
+            return True
 
         return False
     
-    def get_active_alarm(self):
+    def get_active_alarms(self):
         return 0
     
+    def alarms_to_file(self):
+        return 0
+    
+    def alarms_from_file(self):
+        return 0

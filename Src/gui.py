@@ -6,7 +6,7 @@ class GUI:
     def __init__(self, clock):
         self.clock = clock
 
-    def draw_main_window(self):
+    def draw(self):
         window = tkinter.Tk()
         window.geometry("400x600")
         window.title("PyAlarm")
@@ -14,12 +14,12 @@ class GUI:
         self.alarm_listbox = tkinter.Listbox(window, selectmode=tkinter.SINGLE, height=10)
         self.alarm_listbox.pack(padx=10, pady=10, fill=tkinter.BOTH, expand=True)
 
-        self.add_alarm_button = tkinter.Button(window, text="Add Alarm", command=self.draw_new_alarm_window)
+        self.add_alarm_button = tkinter.Button(window, text="Add Alarm", command=self.new_alarm_window)
         self.add_alarm_button.pack(padx=10, pady=10, side=tkinter.BOTTOM, anchor=tkinter.CENTER)
 
         tkinter.mainloop()
 
-    def draw_new_alarm_window(self):
+    def new_alarm_window(self):
         window = tkinter.Tk()
         window.title("Alarm Settings")
 
@@ -60,7 +60,7 @@ class GUI:
         get_values_button = tkinter.Button(window, text="Set Selected Values", command=set_selected_values)
         get_values_button.pack()
 
-    def draw_ongoing_alarm_window(self, alarm):
+    def active_alarm_window(self, alarm):
         window = tkinter.Tk()
         window.title("Alarm")
 
@@ -82,7 +82,7 @@ class GUI:
         snooze_button = tkinter.Button(window, text="Snooze", command=snooze_alarm, bg="blue", fg="white", font=("Helvetica", 14))
         snooze_button.pack()
 
-    def draw_alarm_settings_window(self, alarm):
+    def alarm_settings_window(self, alarm):
         window = tkinter.Tk()
         window.title("Alarm Settings")
 
