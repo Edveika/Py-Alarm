@@ -1,19 +1,18 @@
 import os
 import vlc
 import threading
-import clock
+import alarm
 import gui
 
-
 def main():
-    clock0 = clock.Clock()
+    clock0 = alarm.Alarm()
     ui = gui.GUI(clock0)
 
-    t1 = threading.Thread(target=run_clock, args=(clock0,))
-    t2 = threading.Thread(target=ui.draw_main_window)
+    alarm_thread = threading.Thread(target=run_clock, args=(clock0,))
+    ui_thread = threading.Thread(target=ui.draw_main_window)
 
-    t1.start()
-    t2.start()
+    alarm_thread.start()
+    ui_thread.start()
     
 
 def run_clock(clock):
