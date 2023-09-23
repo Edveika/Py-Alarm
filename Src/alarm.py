@@ -1,3 +1,5 @@
+import os
+import vlc
 import alarm_data
 import datetime
 
@@ -32,3 +34,8 @@ class Alarm:
     
     def alarms_from_file(self):
         return 0
+    
+    def load_alarm_sound(self):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        alarm_sound_path = os.path.join(script_dir, "..", "Assets", "alarm_sound.mp3")
+        self.alarm_sound = vlc.MediaPlayer("file://" + alarm_sound_path)
