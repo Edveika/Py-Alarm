@@ -111,6 +111,12 @@ class GUI:
         window.title("Alarm Settings")
         alarm = self.clock.get_alarms()[alarm_index]
 
+        def refresh_listbox():
+            # Refreshes the listbox of the main menu
+            self.alarm_listbox.delete(0, tkinter.END)
+            for item in self.alarm_names:
+                self.alarm_listbox.insert(tkinter.END, item)
+
         def save_changes():
             new_alarm_name = alarm_name_entry.get()
             alarm.set_name(new_alarm_name)
@@ -125,11 +131,14 @@ class GUI:
             new_snooze = int(snooze_spinbox.get())
             alarm.set_snooze(new_snooze)
 
-            # Refreshes the listbox of the main menu
-            self.alarm_listbox.delete(0, tkinter.END)
-            for item in self.alarm_names:
-                self.alarm_listbox.insert(tkinter.END, item)
+            refresh_listbox()
+            window.destroy()
 
+        def delete_alarm():
+            self.clock.get_alarms().pop(alarm_index)
+            self.alarm_names.pop(alarm_index)
+            
+            refresh_listbox()
             window.destroy()
 
         alarm_name_label = tkinter.Label(window, text="Alarm Name:")
@@ -160,4 +169,7 @@ class GUI:
 
         # Saves the changes to an already existing alarm
         save_button = tkinter.Button(window, text="Save", command=save_changes)
+        save_button.pack()
+
+        save_button = tkinter.Button(window, text="Delete alarm", command=delete_alarm)
         save_button.pack()
