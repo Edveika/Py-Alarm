@@ -13,7 +13,7 @@ class AlarmData:
         return self.hour
     
     def get_minute(self):
-        return self.hour
+        return self.minute
     
     def get_snooze(self):
         return self.snooze

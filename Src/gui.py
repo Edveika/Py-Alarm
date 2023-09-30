@@ -1,22 +1,31 @@
 import tkinter
 import alarm
 import alarm_data
+from tkinter import messagebox
 
 class GUI:
     def __init__(self, clock):
         self.clock = clock
+        self.alarm_names = []
 
     def draw(self):
         window = tkinter.Tk()
         window.geometry("400x600")
         window.title("PyAlarm")
 
+        def on_double_click(event):
+            selected_index = self.alarm_listbox.curselection()
+            if selected_index:
+                self.alarm_settings_window(selected_index[0])
+
         self.alarm_listbox = tkinter.Listbox(window, selectmode=tkinter.SINGLE, height=10)
         self.alarm_listbox.pack(padx=10, pady=10, fill=tkinter.BOTH, expand=True)
 
         self.add_alarm_button = tkinter.Button(window, text="Add Alarm", command=self.new_alarm_window)
         self.add_alarm_button.pack(padx=10, pady=10, side=tkinter.BOTTOM, anchor=tkinter.CENTER)
-        
+ 
+        self.alarm_listbox.bind("<Double-Button-1>", on_double_click)
+
         tkinter.mainloop()
 
     def new_alarm_window(self):
@@ -30,9 +39,15 @@ class GUI:
             selected_snooze = snooze_spinbox.get()
             
             new_alarm = alarm_data.AlarmData(str(selected_name), int(selected_hours), int(selected_minutes), int(selected_snooze))
-            self.clock.add_alarm(new_alarm)
-            self.alarm_listbox.insert(tkinter.END, selected_name)
-            window.destroy()
+
+            if self.clock.alarm_exists(new_alarm):
+                messagebox.showerror("Error", "Alarm with this time already exists.")
+                window.destroy()
+            else:
+                self.clock.add_alarm(new_alarm)
+                self.alarm_listbox.insert(tkinter.END, selected_name)
+                self.alarm_names.append(selected_name)
+                window.destroy()
 
         # Name of the alarm
         current_alarm_name = "Alarm name"
@@ -90,36 +105,57 @@ class GUI:
         snooze_button = tkinter.Button(window, text="Snooze", command=snooze_alarm, bg="blue", fg="white", font=("Helvetica", 14))
         snooze_button.pack()
 
-    def alarm_settings_window(self, alarm):
+    def alarm_settings_window(self, alarm_index):
         window = tkinter.Tk()
+        window.geometry("300x250")
         window.title("Alarm Settings")
+        alarm = self.clock.get_alarms()[alarm_index]
 
         def save_changes():
-            return 0
+            new_alarm_name = alarm_name_entry.get()
+            alarm.set_name(new_alarm_name)
+            self.alarm_names[alarm_index] = new_alarm_name
+
+            new_hour = int(hour_spinbox.get())
+            alarm.set_hour(new_hour)
+
+            new_minute = int(minute_spinbox.get())
+            alarm.set_minute(new_minute)
+
+            new_snooze = int(snooze_spinbox.get())
+            alarm.set_snooze(new_snooze)
+
+            # Refreshes the listbox of the main menu
+            self.alarm_listbox.delete(0, tkinter.END)
+            for item in self.alarm_names:
+                self.alarm_listbox.insert(tkinter.END, item)
+
+            window.destroy()
 
         alarm_name_label = tkinter.Label(window, text="Alarm Name:")
         alarm_name_label.pack()
 
         # Alarm name settings
         alarm_name_entry = tkinter.Entry(window)
+        alarm_name_entry.insert(0, alarm.get_name())
         alarm_name_entry.pack()
 
         # Hours settings
         hour_label = tkinter.Label(window, text="Hours:")
         hour_label.pack()
-        hour_spinbox = tkinter.Spinbox(window, from_=0, to=23)
+        hour_spinbox = tkinter.Spinbox(window, from_=0, to=23, values=alarm.get_hour())
         hour_spinbox.pack()
 
         # Minutes settings
         minute_label = tkinter.Label(window, text="Minutes:")
         minute_label.pack()
-        minute_spinbox = tkinter.Spinbox(window, from_=0, to=59, values=10)
+        minute_spinbox = tkinter.Spinbox(window, from_=0, to=59, values=alarm.get_minute())
         minute_spinbox.pack()
 
         # Snooze timer settings
         snooze_label = tkinter.Label(window, text="Snooze Timer (minutes):")
         snooze_label.pack()
-        snooze_spinbox = tkinter.Spinbox(window, from_=0, to=60)
+        snooze_spinbox = tkinter.Spinbox(window, from_=0, to=60, values=alarm.get_snooze())
         snooze_spinbox.pack()
 
         # Saves the changes to an already existing alarm

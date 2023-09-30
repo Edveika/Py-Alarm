@@ -20,6 +20,8 @@ class Alarm:
     def mainloop(self):
         while self.run == True:
             self.get_active_alarms()
+            if len(self.active_alarms) > 0:
+                self.play_alarm_sound()
         
     def get_alarms(self):
         return self.alarms
@@ -27,10 +29,27 @@ class Alarm:
     def add_alarm(self, alarm):
         self.alarms.append(alarm)
     
+    def alarm_exists(self, alarm):
+        for existing_alarm in self.alarms:
+            if alarm.get_hour() == existing_alarm.get_hour() and alarm.get_minute() == existing_alarm.get_minute():
+                return True
+        
+        return False
+
     def remove_alarm(self, alarm):
         self.alarms.remove(alarm)
 
-    def alarm_active(self, alarm):
+    def get_active_alarms(self):
+        return self.active_alarms
+    
+    def add_active_alarm(self, active_alarm):
+        self.active_alarms.append(active_alarm)
+
+    def remove_active_alarm(self, active_alarm):
+        self.alarms.remove(active_alarm)
+        self.active_alarms.remove(active_alarm)
+
+    def alarm_is_active(self, alarm):
         now_hours = datetime.datetime.now().hour
         now_minutes = datetime.datetime.now().minute
 
@@ -41,8 +60,8 @@ class Alarm:
 
     def get_active_alarms(self):
         for alarm in self.alarms:
-            if self.alarm_active(alarm):
-                self.active_alarms.append(alarm)
+            if self.alarm_is_active(alarm):
+                self.add_active_alarm(alarm)
 
     def play_alarm_sound(self):
         self.alarm_sound.play()
