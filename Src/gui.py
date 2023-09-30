@@ -16,21 +16,29 @@ class GUI:
 
         self.add_alarm_button = tkinter.Button(window, text="Add Alarm", command=self.new_alarm_window)
         self.add_alarm_button.pack(padx=10, pady=10, side=tkinter.BOTTOM, anchor=tkinter.CENTER)
-
+        
         tkinter.mainloop()
 
     def new_alarm_window(self):
         window = tkinter.Tk()
-        window.title("Alarm Settings")
+        window.title("New Alarm")
 
         def set_selected_values():
+            selected_name = alarm_name_entry.get()
             selected_hours = hours_spinbox.get()
             selected_minutes = minutes_spinbox.get()
             selected_snooze = snooze_spinbox.get()
             
-            new_alarm = alarm_data.AlarmData(int(selected_hours), int(selected_minutes))
+            new_alarm = alarm_data.AlarmData(str(selected_name), int(selected_hours), int(selected_minutes), int(selected_snooze))
             self.clock.add_alarm(new_alarm)
+            self.alarm_listbox.insert(tkinter.END, selected_name)
             window.destroy()
+
+        # Name of the alarm
+        current_alarm_name = "Alarm name"
+        alarm_name_entry = tkinter.Entry(window)
+        alarm_name_entry.insert(0, current_alarm_name)
+        alarm_name_entry.pack()
 
         # Hours
         hours_frame = tkinter.Frame(window)
@@ -93,9 +101,7 @@ class GUI:
         alarm_name_label.pack()
 
         # Alarm name settings
-        current_alarm_name = "My Alarm"
         alarm_name_entry = tkinter.Entry(window)
-        alarm_name_entry.insert(0, current_alarm_name)
         alarm_name_entry.pack()
 
         # Hours settings
@@ -107,7 +113,7 @@ class GUI:
         # Minutes settings
         minute_label = tkinter.Label(window, text="Minutes:")
         minute_label.pack()
-        minute_spinbox = tkinter.Spinbox(window, from_=0, to=59)
+        minute_spinbox = tkinter.Spinbox(window, from_=0, to=59, values=10)
         minute_spinbox.pack()
 
         # Snooze timer settings
