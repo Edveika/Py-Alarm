@@ -3,6 +3,7 @@ import vlc
 import time
 import alarm_data
 import datetime
+import threading
 
 class Alarm:
     def __init__(self):
@@ -19,7 +20,7 @@ class Alarm:
 
     def mainloop(self):
         while self.run == True:
-            self.get_active_alarms()
+            self.get_ongoing_alarms()
             if len(self.active_alarms) > 0:
                 self.play_alarm_sound()
             time.sleep(1)
@@ -59,7 +60,7 @@ class Alarm:
 
         return False
 
-    def get_active_alarms(self):
+    def get_ongoing_alarms(self):
         for alarm in self.alarms:
             if self.alarm_is_active(alarm):
                 self.add_active_alarm(alarm)
