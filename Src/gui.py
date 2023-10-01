@@ -2,12 +2,16 @@ import tkinter
 import alarm
 import alarm_data
 from tkinter import messagebox
+import threading
 import time
 
 class GUI:
     def __init__(self, clock):
         self.clock = clock
         self.list_alarm_names = []
+        self.run = True
+        alarm_check_thread = threading.Thread(target=self.check_alarms)
+        alarm_check_thread.start()
 
     def draw(self):
         window = tkinter.Tk()
@@ -21,13 +25,15 @@ class GUI:
 
         self.alarm_listbox = tkinter.Listbox(window, selectmode=tkinter.SINGLE, height=10)
         self.alarm_listbox.pack(padx=10, pady=10, fill=tkinter.BOTH, expand=True)
+        self.alarm_listbox.bind("<Double-Button-1>", on_double_click)
 
         self.add_alarm_button = tkinter.Button(window, text="Add Alarm", command=self.new_alarm_window)
         self.add_alarm_button.pack(padx=10, pady=10, side=tkinter.BOTTOM, anchor=tkinter.CENTER)
- 
-        self.alarm_listbox.bind("<Double-Button-1>", on_double_click)
 
         tkinter.mainloop()
+
+        # Close application flag
+        self.run = False
 
     def new_alarm_window(self):
         window = tkinter.Tk()
@@ -85,41 +91,17 @@ class GUI:
         get_values_button = tkinter.Button(window, text="Set Selected Values", command=set_selected_values)
         get_values_button.pack()
 
-    def active_alarm_window(self, alarm):
-        window = tkinter.Tk()
-        window.title("Alarm")
-
-        def stop_alarm():
-            print("Alarm Stopped")
-
-        def snooze_alarm():
-            print("Alarm Snoozed")
-
-        alarm_time_label = tkinter.Label(window, text="08:00", font=("Helvetica", 36))
-        alarm_time_label.pack()
-
-        alarm_name_label = tkinter.Label(window, text="Morning Alarm", font=("Helvetica", 18))
-        alarm_name_label.pack()
-
-        stop_button = tkinter.Button(window, text="Stop Alarm", command=stop_alarm, bg="red", fg="white", font=("Helvetica", 14))
-        stop_button.pack()
-
-        snooze_button = tkinter.Button(window, text="Snooze", command=snooze_alarm, bg="blue", fg="white", font=("Helvetica", 14))
-        snooze_button.pack()
-
-        tkinter.mainloop()
+    def refresh_listbox(self):
+        # Refreshes the listbox of the main menu
+        self.alarm_listbox.delete(0, tkinter.END)
+        for item in self.list_alarm_names:
+            self.alarm_listbox.insert(tkinter.END, item)
 
     def alarm_settings_window(self, alarm_index):
         window = tkinter.Tk()
         window.geometry("300x250")
         window.title("Alarm Settings")
         alarm = self.clock.get_alarms()[alarm_index]
-
-        def refresh_listbox():
-            # Refreshes the listbox of the main menu
-            self.alarm_listbox.delete(0, tkinter.END)
-            for item in self.list_alarm_names:
-                self.alarm_listbox.insert(tkinter.END, item)
 
         def save_changes():
             new_hour = int(hour_spinbox.get())
@@ -136,14 +118,14 @@ class GUI:
             alarm.set_name(new_alarm_name)
             self.list_alarm_names[alarm_index] = list_new_alarm_name
 
-            refresh_listbox()
+            self.refresh_listbox()
             window.destroy()
 
         def delete_alarm():
             self.clock.get_alarms().pop(alarm_index)
             self.list_alarm_names.pop(alarm_index)
             
-            refresh_listbox()
+            self.refresh_listbox()
             window.destroy()
 
         alarm_name_label = tkinter.Label(window, text="Alarm Name:")
@@ -178,3 +160,18 @@ class GUI:
 
         save_button = tkinter.Button(window, text="Delete alarm", command=delete_alarm)
         save_button.pack()
+
+    def ongoing_alarm_box(self, alarm):
+            result = messagebox.askquestion("Alarm: " + alarm.get_name(), "Dismiss the alarm?", icon='info', type=messagebox.OK)
+            if result == "ok":
+                self.clock.remove_active_alarm(alarm)
+                self.list_alarm_names.remove(alarm.get_name() + " " + "{:02d}".format(int(alarm.get_hour())) + ":" + "{:02d}".format(int(alarm.get_minute())))
+                self.refresh_listbox() 
+    
+    def check_alarms(self):
+        while self.run:
+            # Cool py syntax
+            alarms = [alarm for alarm in self.clock.get_alarms() if self.clock.alarm_is_active(alarm)]
+            for alarm in alarms:
+                self.ongoing_alarm_box(alarm)
+        time.sleep(1)
