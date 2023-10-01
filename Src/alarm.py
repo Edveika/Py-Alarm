@@ -22,6 +22,7 @@ class Alarm:
             self.get_active_alarms()
             if len(self.active_alarms) > 0:
                 self.play_alarm_sound()
+            time.sleep(1)
         
     def get_alarms(self):
         return self.alarms

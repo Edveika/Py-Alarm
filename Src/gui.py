@@ -2,11 +2,12 @@ import tkinter
 import alarm
 import alarm_data
 from tkinter import messagebox
+import time
 
 class GUI:
     def __init__(self, clock):
         self.clock = clock
-        self.alarm_names = []
+        self.list_alarm_names = []
 
     def draw(self):
         window = tkinter.Tk()
@@ -45,8 +46,9 @@ class GUI:
                 window.destroy()
             else:
                 self.clock.add_alarm(new_alarm)
-                self.alarm_listbox.insert(tkinter.END, selected_name)
-                self.alarm_names.append(selected_name)
+                list_alarm_name = selected_name + " " + "{:02d}".format(int(selected_hours)) + ":" + "{:02d}".format(int(selected_minutes))
+                self.alarm_listbox.insert(tkinter.END, list_alarm_name)
+                self.list_alarm_names.append(list_alarm_name)
                 window.destroy()
 
         # Name of the alarm
@@ -105,6 +107,8 @@ class GUI:
         snooze_button = tkinter.Button(window, text="Snooze", command=snooze_alarm, bg="blue", fg="white", font=("Helvetica", 14))
         snooze_button.pack()
 
+        tkinter.mainloop()
+
     def alarm_settings_window(self, alarm_index):
         window = tkinter.Tk()
         window.geometry("300x250")
@@ -114,14 +118,10 @@ class GUI:
         def refresh_listbox():
             # Refreshes the listbox of the main menu
             self.alarm_listbox.delete(0, tkinter.END)
-            for item in self.alarm_names:
+            for item in self.list_alarm_names:
                 self.alarm_listbox.insert(tkinter.END, item)
 
         def save_changes():
-            new_alarm_name = alarm_name_entry.get()
-            alarm.set_name(new_alarm_name)
-            self.alarm_names[alarm_index] = new_alarm_name
-
             new_hour = int(hour_spinbox.get())
             alarm.set_hour(new_hour)
 
@@ -131,12 +131,17 @@ class GUI:
             new_snooze = int(snooze_spinbox.get())
             alarm.set_snooze(new_snooze)
 
+            new_alarm_name = alarm_name_entry.get()
+            list_new_alarm_name = new_alarm_name + " " + "{:02d}".format(new_hour) + ":" + "{:02d}".format(new_minute)
+            alarm.set_name(new_alarm_name)
+            self.list_alarm_names[alarm_index] = list_new_alarm_name
+
             refresh_listbox()
             window.destroy()
 
         def delete_alarm():
             self.clock.get_alarms().pop(alarm_index)
-            self.alarm_names.pop(alarm_index)
+            self.list_alarm_names.pop(alarm_index)
             
             refresh_listbox()
             window.destroy()
