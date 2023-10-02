@@ -17,6 +17,18 @@ class GUI:
         window = tkinter.Tk()
         window.geometry("400x600")
         window.title("PyAlarm")
+        
+        menu_bar = tkinter.Menu(window)
+        window.config(menu=menu_bar)
+
+        file_menu = tkinter.Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="Alarm", menu=file_menu)
+        menu_bar.add_cascade(label="Time")
+        menu_bar.add_cascade(label="Stopwatch")
+        menu_bar.add_cascade(label="Settings")
+        menu_bar.add_cascade(label="About")
+
+        file_menu.add_command(label="New alarm", command=self.new_alarm_window)
 
         def on_double_click(event):
             selected_index = self.alarm_listbox.curselection()
@@ -26,9 +38,6 @@ class GUI:
         self.alarm_listbox = tkinter.Listbox(window, selectmode=tkinter.SINGLE, height=10)
         self.alarm_listbox.pack(padx=10, pady=10, fill=tkinter.BOTH, expand=True)
         self.alarm_listbox.bind("<Double-Button-1>", on_double_click)
-
-        self.add_alarm_button = tkinter.Button(window, text="Add Alarm", command=self.new_alarm_window)
-        self.add_alarm_button.pack(padx=10, pady=10, side=tkinter.BOTTOM, anchor=tkinter.CENTER)
 
         tkinter.mainloop()
 
