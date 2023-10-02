@@ -48,9 +48,8 @@ class GUI:
             selected_name = alarm_name_entry.get()
             selected_hours = hours_spinbox.get()
             selected_minutes = minutes_spinbox.get()
-            selected_snooze = snooze_spinbox.get()
             
-            new_alarm = alarm_data.AlarmData(str(selected_name), int(selected_hours), int(selected_minutes), int(selected_snooze))
+            new_alarm = alarm_data.AlarmData(str(selected_name), int(selected_hours), int(selected_minutes))
 
             if self.clock.alarm_exists(new_alarm):
                 messagebox.showerror("Error", "Alarm with this time already exists.")
@@ -84,14 +83,6 @@ class GUI:
         minutes_spinbox = tkinter.Spinbox(minutes_frame, from_=0, to=59)
         minutes_spinbox.pack(side="left")
 
-        # Snooze Timer
-        snooze_frame = tkinter.Frame(window)
-        snooze_frame.pack()
-        snooze_label = tkinter.Label(snooze_frame, text="Snooze Timer (minutes):")
-        snooze_label.pack(side="left")
-        snooze_spinbox = tkinter.Spinbox(snooze_frame, from_=0, to=60)
-        snooze_spinbox.pack(side="left")
-
         # Set button that creates a new alarm
         get_values_button = tkinter.Button(window, text="Set Selected Values", command=set_selected_values)
         get_values_button.pack()
@@ -114,9 +105,6 @@ class GUI:
 
             new_minute = int(minute_spinbox.get())
             alarm.set_minute(new_minute)
-
-            new_snooze = int(snooze_spinbox.get())
-            alarm.set_snooze(new_snooze)
 
             new_alarm_name = alarm_name_entry.get()
             list_new_alarm_name = new_alarm_name + " " + "{:02d}".format(new_hour) + ":" + "{:02d}".format(new_minute)
@@ -152,12 +140,6 @@ class GUI:
         minute_label.pack()
         minute_spinbox = tkinter.Spinbox(window, from_=0, to=59, values=alarm.get_minute())
         minute_spinbox.pack()
-
-        # Snooze timer settings
-        snooze_label = tkinter.Label(window, text="Snooze Timer (minutes):")
-        snooze_label.pack()
-        snooze_spinbox = tkinter.Spinbox(window, from_=0, to=60, values=alarm.get_snooze())
-        snooze_spinbox.pack()
 
         # Saves the changes to an already existing alarm
         save_button = tkinter.Button(window, text="Save", command=save_changes)

@@ -16,7 +16,6 @@ class Alarm:
         self.alarms = []
         self.active_alarms = []
         load_alarm_sound()
-        # load existing alarms from a file to self.alarms
 
     def mainloop(self):
         while self.run == True:
@@ -24,7 +23,7 @@ class Alarm:
             if len(self.active_alarms) > 0:
                 self.play_alarm_sound()
             time.sleep(1)
-        
+
     def get_alarms(self):
         return self.alarms
 
