@@ -23,10 +23,6 @@ class GUI:
 
         file_menu = tkinter.Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="Alarm", menu=file_menu)
-        menu_bar.add_cascade(label="Time")
-        menu_bar.add_cascade(label="Stopwatch")
-        menu_bar.add_cascade(label="Settings")
-        menu_bar.add_cascade(label="About")
 
         file_menu.add_command(label="New alarm", command=self.new_alarm_window)
 

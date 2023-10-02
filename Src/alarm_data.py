@@ -1,10 +1,9 @@
 
 class AlarmData:
-    def __init__(self, name, hour, minute, snooze_timer):
+    def __init__(self, name, hour, minute):
         self.name = name
         self.hour = hour
         self.minute = minute
-        self.snooze = snooze_timer
 
     def get_name(self):
         return self.name
@@ -15,9 +14,6 @@ class AlarmData:
     def get_minute(self):
         return self.minute
     
-    def get_snooze(self):
-        return self.snooze
-    
     def set_name(self, name):
         self.name = name
 
@@ -26,6 +22,3 @@ class AlarmData:
 
     def set_minute(self, minute):
         self.minute = minute
-
-    def set_snooze(self, snooze):
-        self.snooze = snooze
