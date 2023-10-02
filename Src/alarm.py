@@ -5,7 +5,7 @@ import alarm_data
 import datetime
 import threading
 
-class Alarm:
+class AlarmManager:
     def __init__(self):
         def load_alarm_sound():
             script_dir = os.path.dirname(os.path.abspath(__file__))

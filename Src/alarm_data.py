@@ -1,5 +1,5 @@
 
-class AlarmData:
+class Alarm:
     def __init__(self, name, hour, minute):
         self.name = name
         self.hour = hour

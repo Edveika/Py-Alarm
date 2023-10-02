@@ -5,7 +5,7 @@ from tkinter import messagebox
 import threading
 import time
 
-class GUI:
+class GuiManager:
     def __init__(self, clock):
         self.clock = clock
         self.list_alarm_names = []
@@ -49,7 +49,7 @@ class GUI:
             selected_hours = hours_spinbox.get()
             selected_minutes = minutes_spinbox.get()
             
-            new_alarm = alarm_data.AlarmData(str(selected_name), int(selected_hours), int(selected_minutes))
+            new_alarm = alarm_data.Alarm(str(selected_name), int(selected_hours), int(selected_minutes))
 
             if self.clock.alarm_exists(new_alarm):
                 messagebox.showerror("Error", "Alarm with this time already exists.")
