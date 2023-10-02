@@ -62,7 +62,7 @@ class Alarm:
 
     def get_ongoing_alarms(self):
         for alarm in self.alarms:
-            if self.alarm_is_active(alarm):
+            if self.alarm_is_active(alarm) and not alarm in self.active_alarms:
                 self.add_active_alarm(alarm)
 
     def play_alarm_sound(self):
