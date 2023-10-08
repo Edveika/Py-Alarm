@@ -13,6 +13,10 @@ This is my first python application, without the hello world ones :) For my firs
 6. Graphical user interface(GUI)
 7. Multithreading - one thread for the GUI, other for the alarm manager
 
+# ToDo
+
+1. Check if the window is already open before opening it. Now if the user opens 2 alarm settings windows, deletes one and tries to modify it using the second window, it will lead to undefined behavior.
+
 # Dependencies
 
 1. ```Tkinter```
