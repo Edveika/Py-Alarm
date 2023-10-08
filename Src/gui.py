@@ -46,20 +46,24 @@ class GuiManager:
 
         def set_selected_values():
             selected_name = alarm_name_entry.get()
-            selected_hours = hours_spinbox.get()
-            selected_minutes = minutes_spinbox.get()
+            selected_hours = int(hours_spinbox.get())
+            selected_minutes = int(minutes_spinbox.get())
             
-            new_alarm = alarm_data.Alarm(str(selected_name), int(selected_hours), int(selected_minutes))
-
-            if self.clock.alarm_exists(new_alarm):
-                messagebox.showerror("Error", "Alarm with this time already exists.")
+            if selected_hours > 23 or selected_hours < 0 or selected_minutes > 59 or selected_minutes < 0:
+                messagebox.showerror("Error", "Hour or minute value is out of range [0;23], [0;59]")
                 window.destroy()
             else:
-                self.clock.add_alarm(new_alarm)
-                list_alarm_name = selected_name + " " + "{:02d}".format(int(selected_hours)) + ":" + "{:02d}".format(int(selected_minutes))
-                self.alarm_listbox.insert(tkinter.END, list_alarm_name)
-                self.list_alarm_names.append(list_alarm_name)
-                window.destroy()
+                new_alarm = alarm_data.Alarm(str(selected_name), selected_hours, selected_minutes)
+
+                if self.clock.alarm_exists(new_alarm):
+                    messagebox.showerror("Error", "Alarm with this time already exists.")
+                    window.destroy()
+                else:
+                    self.clock.add_alarm(new_alarm)
+                    list_alarm_name = selected_name + " " + "{:02d}".format(selected_hours) + ":" + "{:02d}".format(selected_minutes)
+                    self.alarm_listbox.insert(tkinter.END, list_alarm_name)
+                    self.list_alarm_names.append(list_alarm_name)
+                    window.destroy()
 
         # Name of the alarm
         current_alarm_name = "Alarm name"
@@ -101,18 +105,21 @@ class GuiManager:
 
         def save_changes():
             new_hour = int(hour_spinbox.get())
-            alarm.set_hour(new_hour)
-
             new_minute = int(minute_spinbox.get())
-            alarm.set_minute(new_minute)
+            if new_hour > 23 or new_hour < 0 or new_minute > 59 or new_minute < 0:
+                messagebox.showerror("Error", "Hour or minute value is out of range [0;23], [0;59]")
+                window.destroy()
+            else:
+                alarm.set_hour(new_hour)
+                alarm.set_minute(new_minute)
 
-            new_alarm_name = alarm_name_entry.get()
-            list_new_alarm_name = new_alarm_name + " " + "{:02d}".format(new_hour) + ":" + "{:02d}".format(new_minute)
-            alarm.set_name(new_alarm_name)
-            self.list_alarm_names[alarm_index] = list_new_alarm_name
+                new_alarm_name = alarm_name_entry.get()
+                list_new_alarm_name = new_alarm_name + " " + "{:02d}".format(new_hour) + ":" + "{:02d}".format(new_minute)
+                alarm.set_name(new_alarm_name)
+                self.list_alarm_names[alarm_index] = list_new_alarm_name
 
-            self.refresh_listbox()
-            window.destroy()
+                self.refresh_listbox()
+                window.destroy()
 
         def delete_alarm():
             self.clock.get_alarms().pop(alarm_index)
