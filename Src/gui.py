@@ -104,29 +104,37 @@ class GuiManager:
         alarm = self.clock.get_alarms()[alarm_index]
 
         def save_changes():
-            new_hour = int(hour_spinbox.get())
-            new_minute = int(minute_spinbox.get())
-            if new_hour > 23 or new_hour < 0 or new_minute > 59 or new_minute < 0:
-                messagebox.showerror("Error", "Hour or minute value is out of range [0;23], [0;59]")
-                window.destroy()
-            else:
-                alarm.set_hour(new_hour)
-                alarm.set_minute(new_minute)
-
+            if alarm in self.clock.get_alarms():
                 new_alarm_name = alarm_name_entry.get()
-                list_new_alarm_name = new_alarm_name + " " + "{:02d}".format(new_hour) + ":" + "{:02d}".format(new_minute)
-                alarm.set_name(new_alarm_name)
-                self.list_alarm_names[alarm_index] = list_new_alarm_name
+                new_hour = int(hour_spinbox.get())
+                new_minute = int(minute_spinbox.get())
+                if new_hour > 23 or new_hour < 0 or new_minute > 59 or new_minute < 0:
+                    messagebox.showerror("Error", "Hour or minute value is out of range [0;23], [0;59]")
+                    window.destroy()
+                else:
+                    alarm.set_hour(new_hour)
+                    alarm.set_minute(new_minute)
 
-                self.refresh_listbox()
+                    list_new_alarm_name = new_alarm_name + " " + "{:02d}".format(new_hour) + ":" + "{:02d}".format(new_minute)
+                    alarm.set_name(new_alarm_name)
+                    self.list_alarm_names[alarm_index] = list_new_alarm_name
+
+                    self.refresh_listbox()
+                    window.destroy()
+            else:
+                messagebox.showerror("Alarm doesnt exist", "The alarm does not exist in the alarm list. Deleted?")
                 window.destroy()
 
         def delete_alarm():
-            self.clock.get_alarms().pop(alarm_index)
-            self.list_alarm_names.pop(alarm_index)
-            
-            self.refresh_listbox()
-            window.destroy()
+            if alarm in self.clock.get_alarms():
+                self.clock.get_alarms().pop(alarm_index)
+                self.list_alarm_names.pop(alarm_index)
+                
+                self.refresh_listbox()
+                window.destroy()
+            else:
+                messagebox.showerror("Alarm doesnt exist", "The alarm does not exist in the alarm list. Deleted?")
+                window.destroy()
 
         alarm_name_label = tkinter.Label(window, text="Alarm Name:")
         alarm_name_label.pack()
