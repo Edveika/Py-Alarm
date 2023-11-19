@@ -1,3 +1,7 @@
+## NOT finished
+
+Although the project does what its supposed to, I plan on replacing ``tkinter`` with ``PyGTK`` or ``PyQT``
+
 # PyAlarm
 
 This is my first python application, without the hello world ones :) For my first python applicaiton i deciced to make an alarm clock. It uses ```tkinter``` for the graphical user interface and also has multi threading so that the GUI doesnt freeze when alarm manager is doing its thing.
