@@ -17,14 +17,29 @@ This is my first python application, without the hello world ones :) For my firs
 6. Graphical user interface(GUI)
 7. Multithreading - one thread for the GUI, other for the alarm manager
 
-# 📑 Dependencies
+# 📔 Libraries used
 
-1. ```Tkinter```
-2. ```VLC```
+* tkinter
+* vlc
+* threading
+* time
+* os
+* datetime
+
+# 🏃 Running the application
+
+* Using python's interpreter in the Py-Alarm/Src/ dir:
+
+```
+python3 main.py
+```
 
 # ⚠️ Problem
 
 Tkinter framework doesnt support threading and its documentation is not great(I had to use stackoverflow and chatgpt a lot to do basic things), I feel like it limits what I can do with it... I was going to add way more functionality but not having the ability to use multi threading really makes it difficult and inconvenient...
+
+* Rewrite the gui using PyGTK/PyQT
+* Replace vlc with other audio playing library
 
 # 📜 License
 
